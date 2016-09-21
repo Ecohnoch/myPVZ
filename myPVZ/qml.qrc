@@ -7,5 +7,7 @@
         <file>PVZFx.qml</file>
         <file>PVZGame.qml</file>
         <file>PVZPlantFunc.qml</file>
+        <file>PVZFight.qml</file>
+        <file>PVZUi.qml</file>
     </qresource>
 </RCC>
