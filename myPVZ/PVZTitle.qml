@@ -62,7 +62,6 @@ Image{
             }
 
             function myClicked(){
-                console.log("clicked")
                 if(itemEvent.flag === "options"){
                     if(itemEvent.area == 2){
                         music.bgmSwith = !music.bgmSwith
@@ -139,30 +138,23 @@ Image{
             if(flag == "title"){
                 if(area === 0) console.log("do nothing")
                 else if(area === 1){
-                    console.log("start game!")
                     fx.switchScene(function(){titleBg.enabled = false}, function(){mainLoader.source = "";fx.startGame(); music.switchTo('Kitanai Sekai')})
                 }else if(area === 2){
-                    console.log("start Mini Game!!")
                     fx.switchScene(function(){titleBg.enabled = false}, function(){mainLoader.source = "";fx.startGame(); music.switchTo('Kitanai Sekai')})
                 }else if(area === 3){
-                    console.log("start IQ Game!!!")
                     fx.switchScene(function(){titleBg.enabled = false}, function(){mainLoader.source = "";fx.startGame(); music.switchTo('Kitanai Sekai')})
                 }else if(area === 4){
                     items.swithFlag("options")
                     titleLock()
                     options()
-
-                    console.log("* options")
                 }else if(area === 5){
                     items.swithFlag("help")
                     titleLock()
                     help()
-                    console.log("* help")
                 }else if(area === 6){
                     items.swithFlag("quit")
                     titleLock()
                     quit()
-                    console.log("* quit")
                 }
             }else{
                 items.menuClick()

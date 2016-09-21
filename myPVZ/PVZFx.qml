@@ -69,11 +69,46 @@ Item {
         property: "x"; to: 0
         duration: 2000; running: false
         easing.type: Easing.InOutQuad
-        onStopped: {game.visible = true; gameBgAnimation.visible = false}
+        onStopped: {beforeStartAnimation.restart()}
     }
     function startGame(){
         gameStart.restart()
     }
+
+    Image{
+        id: beforeStart
+        anchors.centerIn: parent
+        source: "res/images/surface/StartSet.png"
+        opacity: 0.9
+        visible: false
+    }
+
+    NumberAnimation {
+        id: beforeStartAnimation
+        target: beforeStart
+        property: "opacity"
+        to: 1; running: false
+        duration: 1000
+        easing.type: Easing.InOutQuad
+        onStarted: { beforeStart.visible = true}
+        onStopped: { stop1Sec.restart(); beforeStart.source = "res/images/surface/StartReady.png"}
+    }
+    Timer{
+        id: stop1Sec
+        interval: 2000
+        running: false
+        onTriggered: {beforeStart.source = "res/images/surface/StartPlant.png"; stop07Sec.restart()}
+    }
+    Timer{
+        id: stop07Sec
+        interval: 2000
+        running: false
+        onTriggered: {
+            beforeStart.visible = false;game.visible = true
+            gameBgAnimation.visible = false
+        }
+    }
+
 
 
 }
