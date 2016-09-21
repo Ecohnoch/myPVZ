@@ -6,5 +6,6 @@
         <file>PVZTitle.qml</file>
         <file>PVZFx.qml</file>
         <file>PVZGame.qml</file>
+        <file>PVZPlantFunc.qml</file>
     </qresource>
 </RCC>

@@ -47,13 +47,10 @@
         <file>res/images/surface/SurfaceOption.png</file>
         <file>res/images/surface/Win.png</file>
         <file>res/images/plant/pea.png</file>
-        <file>res/images/plant/WallNut/0.gif</file>
         <file>res/images/plant/WallNut/WallNut.gif</file>
         <file>res/images/plant/WallNut/Wallnut_cracked1.gif</file>
         <file>res/images/plant/WallNut/Wallnut_cracked2.gif</file>
-        <file>res/images/plant/SunFlower/0.gif</file>
         <file>res/images/plant/SunFlower/SunFlower1.gif</file>
-        <file>res/images/plant/Peashooter/0.gif</file>
         <file>res/images/plant/Peashooter/Peashooter.gif</file>
         <file>res/audio/Faster.mp3</file>
         <file>res/audio/Kitanai Sekai.mp3</file>
@@ -62,5 +59,11 @@
         <file>res/images/card/Sunflower.png</file>
         <file>res/images/card/WallNut.png</file>
         <file>res/images/surface/SurfaceNomal.png</file>
+        <file>res/images/plant/0.gif</file>
+        <file>res/images/plant/1.gif</file>
+        <file>res/images/plant/2.gif</file>
+        <file>res/images/plant/3.gif</file>
+        <file>res/images/plant/4.gif</file>
+        <file>res/images/plant/5.gif</file>
     </qresource>
 </RCC>

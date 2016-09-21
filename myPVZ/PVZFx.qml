@@ -66,7 +66,7 @@ Item {
     NumberAnimation {
         id: gameStop
         target: gameBgAnimation
-        property: "x"; to: 0
+        property: "x"; to: -80
         duration: 2000; running: false
         easing.type: Easing.InOutQuad
         onStopped: {beforeStartAnimation.restart()}
