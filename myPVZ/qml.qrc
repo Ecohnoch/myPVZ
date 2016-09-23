@@ -9,5 +9,10 @@
         <file>PVZPlantFunc.qml</file>
         <file>PVZFight.qml</file>
         <file>PVZUi.qml</file>
+        <file>PVZZombie.qml</file>
+        <file>PVZPlant.qml</file>
+        <file>PVZSun.qml</file>
+        <file>PVZEvent.qml</file>
+        <file>PVZPean.qml</file>
     </qresource>
 </RCC>

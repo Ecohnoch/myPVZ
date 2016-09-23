@@ -8,10 +8,10 @@ Rectangle{
         id: music
     }
 
-    PVZGame{
-        id: game
-        visible: false
-    }
+//    PVZGame{
+//        id: game
+//        visible: false
+//    }
 
     Loader{
         id: mainLoader

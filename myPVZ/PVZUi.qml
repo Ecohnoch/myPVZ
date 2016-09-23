@@ -14,4 +14,14 @@ Item {
         }
     }
 
+    Rectangle{
+        x: 11; y: 58
+        width: 52; height: 22
+        Text{
+            anchors.centerIn: parent
+            text: ""+sun
+            font.pixelSize: 16
+        }
+    }
+
 }

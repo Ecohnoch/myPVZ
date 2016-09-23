@@ -104,8 +104,9 @@ Item {
         interval: 2000
         running: false
         onTriggered: {
-            beforeStart.visible = false;game.visible = true
+            beforeStart.visible = false;
             gameBgAnimation.visible = false
+            mainLoader.source = "PVZGame.qml"
         }
     }
 
