@@ -14,20 +14,23 @@ AnimatedImage {
     property int speed
     property bool attack: false
     property bool beAttacked: false
+    property bool dead: false
     property int line: 1
     property var yLine: [60, 152, 264, 356, 448]
+    property int z_x: Math.floor(x/10)
     y: yLine[line-1] - 40
 
     //width: 174 + (index%9)*82
     // 62 * 128
 
-    source: "res/images/zombie/Zombie/Zombie.gif"
+    source: {if(dead)  return ""; else return "res/images/zombie/Zombie/Zombie.gif"}
 
     NumberAnimation on x {
         id: move
-        to: 0; running: true
+        to: 0; running: !dead
         duration: speed
     }
+
 
     function positionDetect(i)
     {

@@ -13,20 +13,28 @@ Repeater{
         line: index%5　+ 1
         onXChanged: {
             var z_x = x; var z_line = line
-            var z_field
+            var cur_blood
             for(var i = 0; i < 9; i++){
+                //console.log("isPlant: ", mainField.itemAt((i+(z_line-1)*9)-1).isPlant)
+//                if(mainField.itemAt((i+(z_line-1)*9)-1).isPlant === 1){
+//                    if(mainField.itemAt((i+(z_line-1)*9)-1).peaX === z_x){
+//                        mainField.itemAt((i+(z_line-1)*9)-1).makeShootRestart()
+//                    }
+//                }
+
                 if(x >= (84 + i*82) && x <= (84 + (i+1)*82)){
-                    z_field = i;  //mainField.itemAt(z_field+(line-1)*9).blood
-                    if(mainField.itemAt((z_field+(line-1)*9)).isPlant !== 0){
+                    console.log( mainField.itemAt(i+(9*line)).hasOwnProperty() )
+                    if(mainField.itemAt(i+(9*line)).isPlant !== 0){
+                        cur_blood = mainField.itemAt((i+(z_line-1)*9)).blood
                         zombie.attack = true
                         zombie.attackDetect()
                         attackPlants.myTriggered = function(){
-                            mainField.itemAt((z_field+(line-1)*9)).blood -= 25
-                            console.log("time: ", mainField.itemAt((z_field+(line-1)*9)).blood)
-                            if( mainField.itemAt((z_field+(line-1)*9)).blood <= 0){
-                                mainField.itemAt(z_field+(line-1)*9).isPlant = 0
+                            mainField.itemAt((i+(z_line-1)*9)).blood -= 25
+                            if( mainField.itemAt((i+(z_line-1)*9)).blood <= 0){
+                                mainField.itemAt((i+(z_line-1)*9)).isPlant = 0
                                 zombie.attack = false
                                 zombie.attackDetect()
+                                mainField.itemAt((i+(z_line-1)*9)).blood = cur_blood
                             }else{
                                 attackPlants.restart()
                             }
@@ -45,13 +53,12 @@ Repeater{
             onTriggered: {if(myTriggered) myTriggered()}
         }
     }
-    function getZombie(i, x, line){
-        var p =fight.itemAt(i).x + 90
+    function getZombie(i, x, line, x2){
+        var p = x2 + 90  //fight.itemAt(i).x + 90
         if( x >= p   && line === fight.itemAt(i).line){
             console.log(" crash!!!!!!")
             return true
         }else{
-            console.log(" some thing wrong!!! ", x, p)
             return false
         }
     }

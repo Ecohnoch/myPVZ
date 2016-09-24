@@ -66,26 +66,95 @@ Item {
             width: 80; height: 90
             x: 174 + (index%9)*82; y: 80 + Math.floor(index/9)*92
             property int line: Math.floor(index/9)
-//            PVZEvent{
-//                anchors.fill: parent
-//                flag: 1
-//            }
+            property real peaX: peas.x + field.x
             PVZSun{
                 sunFlag: {if(parent.isPlant == 2) return true; else return false}
                 number: index
             }
+
+            function makePeaRestart(){
+                console.log("please..")
+                peas.shootRestart()
+            }
+
             PVZPean{
+                id: peas
                 x: field.width
                 peaFlag: {if(field.isPlant == 1) return true; else return false}
                 property int line :field.line
             }
-
+        }
+        function getField(x){
+            return mainField.itemAt(x)
         }
     }
 
-    PVZFight{
+    Repeater{
         id: fight
+        model: 1
+        PVZZombie{
+            id: zombie
+
+            x: 950
+            blood: 100
+            force: 20
+            speed: 50000
+            line: 4 //index%5　+ 1
+            onXChanged:  {
+                var cur_blood
+                if(x <= 900){
+                    for(var i = 0; i < 9; i++){
+                        if(mainField.itemAt(i + 9*(line - 1)).isPlant === 1){
+                            console.log(mainField.itemAt(i + 27).peaX, zombie.x, mainField.itemAt(i + 27).peaX>=zombie.x)
+                            if(mainField.itemAt(i + 9*(line - 1)).peaX - 30 >= zombie.x){
+                                mainField.itemAt(i + 9*(line - 1)).makePeaRestart()
+                            }
+                        }
+                        if(x >= (84 + i*82) && x <= (84 + (i+1)*82) && mainField.itemAt(i+(line-1)*9).isPlant !== 0){
+                            cur_blood = mainField.itemAt((i+(line-1)*9)).blood
+                            console.log("ATTACKING!")
+                            zombie.attack = true
+                            zombie.attackDetect()
+                            attackPlants.myTriggered = function(){
+                                mainField.itemAt(i+(line-1)*9).blood -= 25
+                                console.log("blood : ", mainField.itemAt(i+(line-1)*9).blood)
+                                if( mainField.itemAt(i+(line-1)*9).blood <= 0){
+                                    mainField.itemAt(i+(line-1)*9 - 1).isPlant = 0
+                                    console.log(" isPlant: ", mainField.itemAt(i+(line-1)*9).isPlant)
+                                    zombie.attack = false
+                                    zombie.attackDetect()
+                                    mainField.itemAt((i+(line-1)*9)).blood = cur_blood
+                                }else{
+                                    attackPlants.restart()
+                                }
+                            }
+                            attackPlants.restart()
+                        }
+                        else{
+                            zombie.attack = false
+                        }
+                    }
+                }
+            }
+            Timer{
+                id: attackPlants
+                interval: 1500
+                property var myTriggered
+                onTriggered: {if(myTriggered) myTriggered()}
+            }
+        }
+        function getZombie(i, x, line, x2){
+            var p = x2 + 90  //fight.itemAt(i).x + 90
+            if( x >= p   && line === fight.itemAt(i).line){
+                console.log(" crash!!!!!!")
+                return true
+            }else{
+                return false
+            }
+        }
+
     }
+
     PVZUi{
         id: ui
     }
