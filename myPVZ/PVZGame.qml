@@ -23,7 +23,7 @@ Item {
         x: -80; y:0
     }
     Image{
-        id: isPlant
+        id: isPlant0
         source: ""
     }
 
@@ -46,8 +46,8 @@ Item {
         }
         onMouseXChanged: {
             if(plantWhat !== 0){
-                isPlant.source = "res/images/plant/"+(plantWhat-1)+".gif"
-                isPlant.x = mouseX - isPlant.width/2; isPlant.y = mouseY - isPlant.height/2
+                isPlant0.source = "res/images/plant/"+(plantWhat-1)+".gif"
+                isPlant0.x = mouseX - isPlant0.width/2; isPlant0.y = mouseY - isPlant0.height/2
             }else{
                 return
             }
@@ -73,7 +73,6 @@ Item {
             }
 
             function makePeaRestart(){
-                console.log("please..")
                 peas.shootRestart()
             }
 
@@ -105,33 +104,33 @@ Item {
                 if(x <= 900){
                     for(var i = 0; i < 9; i++){
                         if(mainField.itemAt(i + 9*(line - 1)).isPlant === 1){
-                            console.log(mainField.itemAt(i + 27).peaX, zombie.x, mainField.itemAt(i + 27).peaX>=zombie.x)
                             if(mainField.itemAt(i + 9*(line - 1)).peaX - 30 >= zombie.x){
                                 mainField.itemAt(i + 9*(line - 1)).makePeaRestart()
                             }
                         }
-                        if(x >= (84 + i*82) && x <= (84 + (i+1)*82) && mainField.itemAt(i+(line-1)*9).isPlant !== 0){
-                            cur_blood = mainField.itemAt((i+(line-1)*9)).blood
-                            console.log("ATTACKING!")
-                            zombie.attack = true
-                            zombie.attackDetect()
-                            attackPlants.myTriggered = function(){
-                                mainField.itemAt(i+(line-1)*9).blood -= 25
-                                console.log("blood : ", mainField.itemAt(i+(line-1)*9).blood)
-                                if( mainField.itemAt(i+(line-1)*9).blood <= 0){
-                                    mainField.itemAt(i+(line-1)*9 - 1).isPlant = 0
-                                    console.log(" isPlant: ", mainField.itemAt(i+(line-1)*9).isPlant)
-                                    zombie.attack = false
-                                    zombie.attackDetect()
-                                    mainField.itemAt((i+(line-1)*9)).blood = cur_blood
-                                }else{
-                                    attackPlants.restart()
+                        if(x + width/2 >= mainField.itemAt(i + 9*(line - 1)).x
+                                && x + width/2 <= mainField.itemAt(i + 9*(line - 1)).x + 80){ //if(x >= (84 + i*82) && x <= (84 + (i+1)*82) ){
+                            if(mainField.itemAt(i + (line - 1)*9).isPlant !== 0){
+                                cur_blood = mainField.itemAt((i+(line-1)*9)).blood
+                                zombie.attack = true
+                                zombie.attackDetect()
+                                attackPlants.myTriggered = function(){
+                                    mainField.itemAt(i+(line-1)*9).blood -= 25
+                                    console.log("blood : ", mainField.itemAt(i+(line-1)*9).blood)
+                                    if( mainField.itemAt(i + (line - 1)*9).blood <= 0){
+                                        mainField.itemAt(i + (line - 1)*9).isPlant = 0
+                                        zombie.attack = false
+                                        zombie.attackDetect()
+                                        mainField.itemAt(i + (line-1)*9).blood = cur_blood
+                                        attackPlants.myTriggered = {}
+                                    }else{
+                                        attackPlants.restart()
+                                    }
                                 }
+                                attackPlants.start()
+                            }else{
+                                zombie.attack = false
                             }
-                            attackPlants.restart()
-                        }
-                        else{
-                            zombie.attack = false
                         }
                     }
                 }
@@ -152,7 +151,6 @@ Item {
                 return false
             }
         }
-
     }
 
     PVZUi{

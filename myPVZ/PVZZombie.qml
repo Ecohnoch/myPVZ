@@ -30,7 +30,11 @@ AnimatedImage {
         to: 0; running: !dead
         duration: speed
     }
-
+    NumberAnimation on x{
+        id: down
+        to: 0; running: false
+        duration: 1000000000
+    }
 
     function positionDetect(i)
     {
@@ -42,8 +46,10 @@ AnimatedImage {
     function attackDetect(){
         if(attack){
             move.pause()
+            down.restart()
             source = "res/images/zombie/Zombie/ZombieAttack.gif"
         }else{
+            down.stop()
             move.resume()
             source = "res/images/zombie/Zombie/Zombie.gif"
         }
