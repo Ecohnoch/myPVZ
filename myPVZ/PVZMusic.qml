@@ -8,8 +8,8 @@ Video {
     id: bgm
     source: "res/audio/Faster.mp3"
     autoPlay: true
+    volume: 0
     onStopped: bgm.play()
-
     function switchTo(path){
         bgm.source = "res/audio/" + path +".mp3"
     }

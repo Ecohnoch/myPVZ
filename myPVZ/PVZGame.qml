@@ -67,6 +67,7 @@ Item {
             x: 174 + (index%9)*82; y: 80 + Math.floor(index/9)*92
             property int line: Math.floor(index/9)
             property real peaX: peas.x + field.x
+            property bool beHurt: false
             PVZSun{
                 sunFlag: {if(parent.isPlant == 2) return true; else return false}
                 number: index
@@ -75,6 +76,31 @@ Item {
             function makePeaRestart(){
                 peas.shootRestart()
             }
+            Timer{
+                id: hurt; interval: 1500
+                property var myTriggered
+                onTriggered: {if(myTriggered) myTriggered()}
+            }
+
+            function beHurtListener(){
+                if(field.beHurt){
+                    if(field.blood >= 0){
+                        hurt.myTriggered = function(){
+                            field.blood -= 25
+                            console.log("new blood: ", field.blood)
+                            if(field.blood > 0){
+                                hurt.restart()
+                            }else{
+                                field.isPlant = 0
+                                hurt.myTriggered = {}
+                                field.beHurt = false
+                            }
+                        }
+                        hurt.restart()
+                    }
+                }
+            }
+
 
             PVZPean{
                 id: peas
@@ -108,29 +134,14 @@ Item {
                                 mainField.itemAt(i + 9*(line - 1)).makePeaRestart()
                             }
                         }
-                        if(x + width/2 >= mainField.itemAt(i + 9*(line - 1)).x
-                                && x + width/2 <= mainField.itemAt(i + 9*(line - 1)).x + 80){ //if(x >= (84 + i*82) && x <= (84 + (i+1)*82) ){
-                            if(mainField.itemAt(i + (line - 1)*9).isPlant !== 0){
-                                cur_blood = mainField.itemAt((i+(line-1)*9)).blood
-                                zombie.attack = true
-                                zombie.attackDetect()
-                                attackPlants.myTriggered = function(){
-                                    mainField.itemAt(i+(line-1)*9).blood -= 25
-                                    console.log("blood : ", mainField.itemAt(i+(line-1)*9).blood)
-                                    if( mainField.itemAt(i + (line - 1)*9).blood <= 0){
-                                        mainField.itemAt(i + (line - 1)*9).isPlant = 0
-                                        zombie.attack = false
-                                        zombie.attackDetect()
-                                        mainField.itemAt(i + (line-1)*9).blood = cur_blood
-                                        attackPlants.myTriggered = {}
-                                    }else{
-                                        attackPlants.restart()
-                                    }
-                                }
-                                attackPlants.start()
-                            }else{
-                                zombie.attack = false
-                            }
+                    }
+                    for(var ii = 0; ii < 9; ii++){
+                        var z_field = mainField.getField(ii + 9*(line - 1))
+                        if(x >= z_field.x - 40 && x <= z_field.x + z_field.width - 40 && z_field.i.isPlant !== 0){
+                            z_field.beHurt = true
+                            z_field.beHurtListener()
+                            attack = true
+                            attackDetect()
                         }
                     }
                 }

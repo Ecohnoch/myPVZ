@@ -9,11 +9,6 @@ AnimatedImage {
     property int blood: {if(isPlant == 3) return 400; else return 100}
     source: plants[isPlant]
 
-    onIsPlantChanged: {
-        if(isPlant == 1){
-
-        }
-    }
 
 }
 
