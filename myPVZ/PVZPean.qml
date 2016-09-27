@@ -11,10 +11,11 @@ Image{
         duration: 2000
         from: parent.width - 5
         to: 900;
-        loops: Animation.Infinite
+        onStarted: {pea.visible = true}
+        onStopped: {pea.visible = true; shoot.restart(); flag = true}
     }
     function shootRestart(){
-        shoot.restart()
+        pea.visible = false
     }
 
 }

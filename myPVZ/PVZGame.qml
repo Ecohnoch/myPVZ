@@ -3,19 +3,12 @@ import QtQuick 2.7
 Item {
     id:game
     width: 900; height: 600
-//    property string flag: "nothing"
-//    property bool ok: false // if you want to plant?
-//    property int randomSun: 50*Math.random()   // if > 48, the sun falls
-//    property int coldFlag: -1
-//    property var everyOk: [true, true, true, true, true, true]
 
-//    property var plantsF:[25, 0, 0]
-//    property var plantsB:[100, 100, 400]
-//    property int tmpB: 100
-//    //real properties
     property int sun: 50
-    property int plantWhat: 1
+    property int plantWhat: 0
+    property bool flag: true
     property bool plantFlag: false
+    property bool readyToPlant: false
 
     Image{
         id: gameBg
@@ -40,6 +33,9 @@ Item {
                             && mouseY >= 80 + Math.floor(i/9)*92 && mouseY <=
                             80 + Math.floor((i/9)+1)*92 && mainField.itemAt(i).isPlant === 0){
                         mainField.itemAt(i).isPlant = plantWhat
+                        ui.coldRestart(plantWhat - 1)
+                        plantWhat = 0; isPlant0.source = ""
+                        readyToPlant = false
                     }
                 }
             }
@@ -52,7 +48,6 @@ Item {
                 return
             }
         }
-
     }
 
 
@@ -84,19 +79,26 @@ Item {
 
             function beHurtListener(){
                 if(field.beHurt){
+                    //var cur_blood = field.blood
                     if(field.blood >= 0){
                         hurt.myTriggered = function(){
                             field.blood -= 25
                             console.log("new blood: ", field.blood)
                             if(field.blood > 0){
+//                                if( field.isPlant === 3 && field.blood >= 100 && field.blood <= 200){
+//                                    field.source = "res/images/plant/WallNut/Wallnut_cracked1.gif"
+//                                }else if(field.isPlant === 3 && field.blood < 100){
+//                                    field.source = "res/images/plant/WallNut/Wallnut_cracked2.gif"
+//                                }
                                 hurt.restart()
                             }else{
                                 field.isPlant = 0
                                 hurt.myTriggered = {}
                                 field.beHurt = false
+                                field.blood = 100
                             }
                         }
-                        hurt.restart()
+                        hurt.start()
                     }
                 }
             }
@@ -121,7 +123,7 @@ Item {
             id: zombie
 
             x: 950
-            blood: 100
+            blood: 300
             force: 20
             speed: 50000
             line: 4 //index%5　+ 1
@@ -132,16 +134,22 @@ Item {
                         if(mainField.itemAt(i + 9*(line - 1)).isPlant === 1){
                             if(mainField.itemAt(i + 9*(line - 1)).peaX - 30 >= zombie.x){
                                 mainField.itemAt(i + 9*(line - 1)).makePeaRestart()
+                                if(flag){
+                                    zombie.blood -= 25
+                                    console.log(" zombie, blood ")
+                                    if(zombie.blood < 0) zombie.dead = true
+                                    flag = false
+                                }
                             }
                         }
-                    }
-                    for(var ii = 0; ii < 9; ii++){
-                        var z_field = mainField.getField(ii + 9*(line - 1))
-                        if(x >= z_field.x - 40 && x <= z_field.x + z_field.width - 40 && z_field.i.isPlant !== 0){
-                            z_field.beHurt = true
-                            z_field.beHurtListener()
-                            attack = true
-                            attackDetect()
+                        if(x >= mainField.itemAt(i + 9*(line - 1)).x - 80 && x <= mainField.itemAt(i + 9*(line - 1)).x + mainField.itemAt(i + 9*(line - 1)).width - 80){
+                            if(mainField.itemAt(i + 9*(line - 1)).isPlant !== 0){
+                                mainField.itemAt(i + 9*(line - 1)).beHurt = true
+                                mainField.itemAt(i + 9*(line - 1)).beHurtListener()
+                                attack = true; attackDetect()
+                            }else{
+                                attack = false; attackDetect()
+                            }
                         }
                     }
                 }

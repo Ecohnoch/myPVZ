@@ -9,7 +9,7 @@ import QtQuick 2.7
 //}
 
 AnimatedImage {
-    property int blood: 100
+    property int blood: 500
     property int force
     property int speed
     property bool attack: false
@@ -44,14 +44,18 @@ AnimatedImage {
 
 
     function attackDetect(){
-        if(attack){
-            move.pause()
-            down.restart()
-            source = "res/images/zombie/Zombie/ZombieAttack.gif"
+        if(blood >= 0){
+            if(attack){
+                move.pause()
+                down.restart()
+                source = "res/images/zombie/Zombie/ZombieAttack.gif"
+            }else{
+                down.stop()
+                move.resume()
+                source = "res/images/zombie/Zombie/Zombie.gif"
+            }
         }else{
-            down.stop()
-            move.resume()
-            source = "res/images/zombie/Zombie/Zombie.gif"
+            source = ""
         }
     }
 
