@@ -25,6 +25,32 @@ AnimatedImage {
 
     source: {if(dead)  return ""; else return "res/images/zombie/Zombie/Zombie.gif"}
 
+    onDeadChanged: {
+        if(dead){
+            deadBody.source = "res/images/zombie/Zombie/ZombieDie.gif"
+            deadHead.source = "res/images/zombie/Zombie/ZombieHead.gif"
+            playDead.restart()
+            //x = 1100
+            console.log(" zombie dead!!")
+        }
+    }
+    AnimatedImage{
+        id: deadBody
+        source: ""
+    }
+    AnimatedImage{
+        id: deadHead
+        source: ""
+    }
+    Timer{
+        id: playDead
+        interval: 1000
+        onTriggered: {
+            deadBody.source = ""
+            deadHead.source = ""
+        }
+    }
+
     NumberAnimation on x {
         id: move
         to: 0; running: !dead
@@ -44,26 +70,23 @@ AnimatedImage {
 
 
     function attackDetect(){
-        if(blood >= 0){
-            if(attack){
+         if(attack){
+             if(dead){ source = ""}
+             else{
                 move.pause()
                 down.restart()
                 source = "res/images/zombie/Zombie/ZombieAttack.gif"
-            }else{
+             }
+         }else{
+             if(dead){ source = ""}
+             else{
                 down.stop()
                 move.resume()
                 source = "res/images/zombie/Zombie/Zombie.gif"
-            }
-        }else{
-            source = ""
+             }
         }
     }
 
-    function beAttackedDetect(){
-        if(beAttacked){
-            // to do , with a timer
-        }
-    }
 
 
 

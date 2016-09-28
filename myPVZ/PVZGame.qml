@@ -10,6 +10,17 @@ Item {
     property bool plantFlag: false
     property bool readyToPlant: false
 
+    onSunChanged: {
+        var cost = [100, 50, 50]
+        for(var i = 0; i < cost.length; i++){
+            if(sun < cost[i]){
+                ui.coldShow(i)
+            }else{
+                ui.coldDown(i)
+            }
+        }
+    }
+
     Image{
         id: gameBg
         source:"res/images/surface/NormalGrass.png"
@@ -27,13 +38,16 @@ Item {
         hoverEnabled: true
         onClicked:{
             console.log("mouseX, mouseY: ", mouseX, mouseY)
+            var cost = [100, 50, 50]
             if(plantWhat !== 0){
                 for(var i = 0; i < 45; i++){
                     if( mouseX >= 174 + (i%9)*82 && mouseX <= 174 + ((i%9)+1)*82
                             && mouseY >= 80 + Math.floor(i/9)*92 && mouseY <=
                             80 + Math.floor((i/9)+1)*92 && mainField.itemAt(i).isPlant === 0){
                         mainField.itemAt(i).isPlant = plantWhat
-                        ui.coldRestart(plantWhat - 1)
+                        sun -= cost[plantWhat - 1]
+                        if( sun >= cost[plantWhat - 1])
+                            ui.coldRestart(plantWhat - 1)
                         plantWhat = 0; isPlant0.source = ""
                         readyToPlant = false
                     }
@@ -77,25 +91,29 @@ Item {
                 onTriggered: {if(myTriggered) myTriggered()}
             }
 
+            onBeHurtChanged: {
+                if(!beHurt){
+                    hurt.myTriggered = {}
+                    hurt.stop()
+                }
+            }
+
             function beHurtListener(){
                 if(field.beHurt){
                     //var cur_blood = field.blood
                     if(field.blood >= 0){
                         hurt.myTriggered = function(){
                             field.blood -= 25
-                            console.log("new blood: ", field.blood)
-                            if(field.blood > 0){
-//                                if( field.isPlant === 3 && field.blood >= 100 && field.blood <= 200){
-//                                    field.source = "res/images/plant/WallNut/Wallnut_cracked1.gif"
-//                                }else if(field.isPlant === 3 && field.blood < 100){
-//                                    field.source = "res/images/plant/WallNut/Wallnut_cracked2.gif"
-//                                }
-                                hurt.restart()
-                            }else{
-                                field.isPlant = 0
-                                hurt.myTriggered = {}
-                                field.beHurt = false
-                                field.blood = 100
+                            console.log("new blood: ", field.blood, field.beHurt)
+                            if(beHurt){
+                                if(field.blood > 0){
+                                    hurt.restart()
+                                }else{
+                                    field.isPlant = 0
+                                    hurt.myTriggered = {}
+                                    field.beHurt = false
+                                    field.blood = 100
+                                }
                             }
                         }
                         hurt.start()
@@ -123,13 +141,13 @@ Item {
             id: zombie
 
             x: 950
-            blood: 300
+            blood: 200
             force: 20
             speed: 50000
             line: 4 //index%5　+ 1
             onXChanged:  {
                 var cur_blood
-                if(x <= 900){
+                if(x <= 900 && !dead){
                     for(var i = 0; i < 9; i++){
                         if(mainField.itemAt(i + 9*(line - 1)).isPlant === 1){
                             if(mainField.itemAt(i + 9*(line - 1)).peaX - 30 >= zombie.x){
@@ -137,7 +155,9 @@ Item {
                                 if(flag){
                                     zombie.blood -= 25
                                     console.log(" zombie, blood ")
-                                    if(zombie.blood < 0) zombie.dead = true
+                                    if(zombie.blood < 0){
+                                        zombie.dead = true
+                                    }
                                     flag = false
                                 }
                             }
@@ -147,8 +167,13 @@ Item {
                                 mainField.itemAt(i + 9*(line - 1)).beHurt = true
                                 mainField.itemAt(i + 9*(line - 1)).beHurtListener()
                                 attack = true; attackDetect()
-                            }else{
+                            }/*else if(dead){
+                                mainField.itemAt(i + 9*(line - 1)).beHurt = false
+                            }*/else{
                                 attack = false; attackDetect()
+                            }
+                            if(dead){
+                                mainField.itemAt(i + 9*(line - 1)).beHurt = false
                             }
                         }
                     }

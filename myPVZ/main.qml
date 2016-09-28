@@ -15,7 +15,7 @@ Rectangle{
 
     Loader{
         id: mainLoader
-        source: "PVZGame.qml"
+        source: "PVZTitle.qml"
     }
 
     PVZFx{
